@@ -26,11 +26,7 @@ namespace EFC_project
 
         [ForeignKey("FK_Client_IdOfDocument")]
         public int IdOfDocument { get; set; }
-
-        [Required]
         public string PassportNumber { get; set; }
-
-        [Required]
         public string PassportSeria { get; set; }
         public List<Document> Documents { get; set; }
         public List<Visiting> Visitings { get; set; }

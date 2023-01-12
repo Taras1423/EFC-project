@@ -14,6 +14,8 @@ namespace EFC_project
         public int NumberOfStorage { get; set; }
         public string DateOfEntry { get; set; }
         public string DateOfExit { get; set; }
+        public string ClientPassportSeria { get; set; }
+        public string ClientPassportNumber { get; set; }
         public Storage Storage { get; set; }
         public Client Client { get; set; }
 

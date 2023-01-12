@@ -72,7 +72,7 @@ namespace EFC_project
 
             modelBuilder.Entity<Client>(entity =>
             {
-                entity.HasKey(u => new { u.PassportSeria, u.PassportNumber });
+                //entity.HasKey(u => new { u.PassportSeria, u.PassportNumber });
                 entity.HasMany(p => p.Documents).WithOne(u => u.Client);
             });
 
@@ -230,8 +230,7 @@ namespace EFC_project
                 IdOfClient = 1111,
                 DateOfTakeRent = DateTime.Now,
                 DateOfCancelRent = DateTime.Now.AddYears(10),
-                NumberOfCell = 3, 
-                ClientId = 1111
+                NumberOfCell = 3
             };
             Document Document2 = new Document
             {
@@ -256,7 +255,10 @@ namespace EFC_project
                 IdOfClient = Client1.ClientId,
                 NumberOfStorage = Storage1.Number,
                 DateOfEntry = "12.04.2022",
-                DateOfExit = "13.04.2022"
+                DateOfExit = "13.04.2022",
+                ClientPassportNumber = Client1.PassportNumber,
+                ClientPassportSeria = Client1.PassportSeria
+
             };
             Visiting Visiting2 = new Visiting
             {
@@ -264,7 +266,9 @@ namespace EFC_project
                 IdOfClient = Client2.ClientId,
                 NumberOfStorage = Storage2.Number,
                 DateOfEntry = "12.12.2022",
-                DateOfExit = "13.12.2022"
+                DateOfExit = "13.12.2022",
+                ClientPassportNumber = Client2.PassportNumber,
+                ClientPassportSeria = Client2.PassportSeria
             };
             Visiting Visiting3 = new Visiting
             {
@@ -272,7 +276,9 @@ namespace EFC_project
                 IdOfClient = Client3.ClientId,
                 NumberOfStorage = Storage3.Number,
                 DateOfEntry = "12.03.2022",
-                DateOfExit = "13.03.2022"
+                DateOfExit = "13.03.2022",
+                ClientPassportNumber = Client3.PassportNumber,
+                ClientPassportSeria = Client3.PassportSeria
             };
 
             modelBuilder.Entity<Storage>().HasData(Storage1, Storage2, Storage3);

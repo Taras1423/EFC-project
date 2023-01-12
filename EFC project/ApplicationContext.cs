@@ -9,13 +9,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Reflection.PortableExecutable;
-
+using EFC_project.Models;
 
 namespace EFC_project
 {
     public class ApplicationContext : DbContext
     {
-        public DbSet<Storage> Storages { get; set; } = null!;
+        public DbSet<MainStorage> Storages { get; set; } = null!;
         public DbSet<Client> Clients { get; set; } = null!;
         public DbSet<Document> Documents { get; set; } = null!;
         public DbSet<Room> Rooms { get; set; } = null!;
@@ -42,7 +42,7 @@ namespace EFC_project
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Storage>(entity =>
+            modelBuilder.Entity<MainStorage>(entity =>
             {
                 entity.HasKey(u => u.Number).HasName("PK_Storage");
                 entity.Ignore(u => u.NameOfOwner);
@@ -58,7 +58,7 @@ namespace EFC_project
                 entity.ToTable("Room");
                 entity.Property(u => u.TemperatureRange).IsRequired();
                 entity.Property(u => u.TemperatureRange).HasMaxLength(25);
-                entity.HasOne(p => p.Storage).WithMany(u => u.Rooms);
+                entity.HasOne(p => p.Storage).WithMany(u => u.Rooms).HasForeignKey(b => b.NumberOfStorage).HasConstraintName("FK_Room_NumberOfStorage");
             });
 
             modelBuilder.Entity<Visiting>(entity =>
@@ -73,13 +73,13 @@ namespace EFC_project
             modelBuilder.Entity<Client>(entity =>
             {
                 //entity.HasKey(u => new { u.PassportSeria, u.PassportNumber });
-                entity.HasMany(p => p.Documents).WithOne(u => u.Client);
+                //entity.HasMany(p => p.Documents).WithOne(u => u.Client);
             });
 
             modelBuilder.Entity<Worker>(entity =>
             {
                 entity.HasKey(u => new { u.PassportSeria, u.PassportNumber });
-                entity.HasOne(p => p.Storage).WithMany(u => u.Workers);
+                entity.HasOne(p => p.Storage).WithMany(u => u.Workers).HasForeignKey(b => b.NumberOfStorage).HasConstraintName("FK_Worker_NumberOfStorage");
 
             });
 
@@ -89,7 +89,7 @@ namespace EFC_project
             });
 
 
-            Storage Storage1 = new Storage 
+            MainStorage Storage1 = new MainStorage
             { 
                 Number = 1, 
                 NumberOfRooms = 2, 
@@ -98,7 +98,7 @@ namespace EFC_project
                 WorkerPassportNumber = "112233",
                 WorkerPassportSeria = "112234"
             };
-            Storage Storage2 = new Storage 
+            MainStorage Storage2 = new MainStorage
             { 
                 Number = 2, 
                 NumberOfRooms = 2, 
@@ -107,7 +107,7 @@ namespace EFC_project
                 WorkerPassportNumber = "122233",
                 WorkerPassportSeria = "122234"
             };
-            Storage Storage3 = new Storage 
+            MainStorage Storage3 = new MainStorage
             { 
                 Number = 3, 
                 NumberOfRooms = 2, 
@@ -156,43 +156,26 @@ namespace EFC_project
                 Number = 1,
                 NumberOfStorage = Storage1.Number,
                 NumberOfRows = 3,
-                TemperatureRange = "-10 °C - 0 °C"
+                TemperatureRange = "-10 °C - 0 °C",
+                StorageNumber = Storage1.Number
             };
             Room Room2 = new Room
             {
                 Number = 2,
                 NumberOfStorage = Storage2.Number,
                 NumberOfRows = 3,
-                TemperatureRange = "-10 °C - 0 °C"
+                TemperatureRange = "-10 °C - 0 °C",
+                StorageNumber = Storage2.Number
             };
             Room Room3 = new Room
             {
                 Number = 3,
                 NumberOfStorage = Storage3.Number,
                 NumberOfRows = 5,
-                TemperatureRange = "10 °C - 50 °C"
+                TemperatureRange = "10 °C - 50 °C",
+                StorageNumber = Storage3.Number
             };
-            /*Room Room4 = new Room
-            {
-                Number = 4,
-                NumberOfStorage = Storage2.Number,
-                NumberOfRows = 5,
-                TemperatureRange = "10 °C - 50 °C"
-            };
-            Room Room5 = new Room
-            {
-                Number = 5,
-                NumberOfStorage = Storage3.Number,
-                NumberOfRows = 10,
-                TemperatureRange = "50 °C - 100 °C"
-            };
-            Room Room6 = new Room
-            {
-                Number = 6,
-                NumberOfStorage = Storage3.Number,
-                NumberOfRows = 10,
-                TemperatureRange = "50 °C - 100 °C"
-            };*/
+            
             Client Client1 = new Client
             {
                 ClientId = 1111,
@@ -281,7 +264,7 @@ namespace EFC_project
                 ClientPassportSeria = Client3.PassportSeria
             };
 
-            modelBuilder.Entity<Storage>().HasData(Storage1, Storage2, Storage3);
+            modelBuilder.Entity<MainStorage>().HasData(Storage1, Storage2, Storage3);
             modelBuilder.Entity<Client>().HasData(Client1, Client2, Client3);
             modelBuilder.Entity<Document>().HasData(Document1, Document2, Document3);
             modelBuilder.Entity<Worker>().HasData(Worker1, Worker2, Worker3);

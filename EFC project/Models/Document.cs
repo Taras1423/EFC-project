@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EFC_project
+namespace EFC_project.Models
 {
     [Table("Document")]
     public class Document
@@ -25,7 +25,7 @@ namespace EFC_project
 
         public int NumberOfCell { get; set; }
 
-        public Client Client { get; set; }
+        //public Client Client { get; set; }
 
     }
 }

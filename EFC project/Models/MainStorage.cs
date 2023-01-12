@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 
-namespace EFC_project
+namespace EFC_project.Models
 {
-    public class Storage
+    public class MainStorage
     {
         public int Number { get; set; }
         public int NumberOfRooms { get; set; }

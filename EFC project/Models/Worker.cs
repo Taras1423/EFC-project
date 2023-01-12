@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace EFC_project
+namespace EFC_project.Models
 {
     [Table("Worker")]
     public class Worker
@@ -14,7 +14,7 @@ namespace EFC_project
         //[Key]
         public int WorkerId { get; set; }
 
-        [ForeignKey("FK_Worker_NumberOfStorage")]
+        //[ForeignKey("FK_Worker_NumberOfStorage")]
         public int NumberOfStorage { get; set; }
 
         [MaxLength(25)]
@@ -31,7 +31,7 @@ namespace EFC_project
 
         public string PassportNumber { get; set; }
         public string PassportSeria { get; set; }
-        public Storage Storage { get; set; }
+        public MainStorage Storage { get; set; }
 
     }
 }

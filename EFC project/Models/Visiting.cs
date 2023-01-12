@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 
-namespace EFC_project
+namespace EFC_project.Models
 {
     public class Visiting
     {
@@ -16,7 +16,7 @@ namespace EFC_project
         public string DateOfExit { get; set; }
         public string ClientPassportSeria { get; set; }
         public string ClientPassportNumber { get; set; }
-        public Storage Storage { get; set; }
+        public MainStorage Storage { get; set; }
         public Client Client { get; set; }
 
     }

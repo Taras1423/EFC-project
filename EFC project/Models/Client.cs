@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EFC_project
+namespace EFC_project.Models
 {
     [Table("Client")]
     public class Client

@@ -83,14 +83,36 @@ static void Delete()
 
 using (ApplicationContext db = new ApplicationContext())
 {
-    var storages = db.Storages.ToList();
-    Console.WriteLine("Storages list:");
-    foreach (MainStorage u in storages)
+    var visitings = db.Visitings.ToList();
+    Console.WriteLine("Visitings list:");
+    foreach (Visiting u in visitings)
     {
-        Console.WriteLine($"{u.Number}, {u.NumberOfRooms}, {u.IdOfWorker}, {u.Size}");
+        Console.WriteLine($"" +
+            $"{u.VisitingId}, " +
+            $"{u.IdOfClient}, " +
+            $"{u.NumberOfStorage}, " +
+            $"{u.DateOfEntry}, " +
+            $"{u.DateOfExit}, " +
+            $"ClientPhoneNumber - {u.ClientPhoneNumber}, " +
+            $"{u.ClientPassportNumber}, " +
+            $"{u.ClientPassportSeria}, ");
     }
 
-    Create();
-    Update();
-    Delete();
+    var clients = db.Clients.ToList();
+    Console.WriteLine("Clients list:");
+    foreach (Client u in clients)
+    {
+        Console.WriteLine($"" +
+            $"{u.ClientId}, " +
+            $"{u.Name}, " +
+            $"PhoneNumber - {u.PhoneNumber}, " +
+            $"{u.Email}, " +
+            $"{u.IdOfDocument}, " +
+            $"{u.PassportNumber}, " +
+            $"{u.PassportSeria}, ");
+    }
+
+    //Create();
+    //Update();
+    //Delete();
 }

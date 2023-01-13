@@ -16,15 +16,11 @@ namespace EFC_project.Models
 
         [MaxLength(25)]
         public string Name { get; set; }
-
-        [Required]
-        public int PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
 
         [MaxLength(50)]
         [Required]
         public string Email { get; set; }
-
-        [ForeignKey("FK_Client_IdOfDocument")]
         public int IdOfDocument { get; set; }
         public string PassportNumber { get; set; }
         public string PassportSeria { get; set; }

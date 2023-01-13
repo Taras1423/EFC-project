@@ -67,13 +67,14 @@ namespace EFC_project
                 entity.ToTable("Visiting");
                 entity.Property(u => u.IdOfClient).IsRequired();
                 entity.HasOne(p => p.Storage).WithMany(u => u.Visitings).HasForeignKey(d => d.NumberOfStorage).HasConstraintName("FK_Visiting_NumberOfStorage");
-                entity.HasOne(p => p.Client).WithMany(u => u.Visitings).HasForeignKey(d => d.IdOfClient).HasConstraintName("FK_Visiting_IdOfClient");
+                entity.HasOne(p => p.Client).WithMany(u => u.Visitings).HasForeignKey(d => d.ClientPhoneNumber).HasConstraintName("FK_Visiting_ClientPhoneNumber").HasPrincipalKey(c => c.PhoneNumber);
             });
 
             modelBuilder.Entity<Client>(entity =>
             {
-                //entity.HasKey(u => new { u.PassportSeria, u.PassportNumber });
-                //entity.HasMany(p => p.Documents).WithOne(u => u.Client);
+                entity.HasMany(p => p.Documents).WithOne(u => u.Client).HasForeignKey(a => a.IdOfClient).HasConstraintName("FK_Document_IdOfClient");
+                entity.HasAlternateKey(u => u.PhoneNumber);              
+                entity.HasAlternateKey(u => u.Email);
             });
 
             modelBuilder.Entity<Worker>(entity =>
@@ -180,7 +181,7 @@ namespace EFC_project
             {
                 ClientId = 1111,
                 Name = "George",
-                PhoneNumber = 1354551,
+                PhoneNumber = "1354551",
                 Email = "client1@gmail.com",
                 IdOfDocument = 11,
                 PassportNumber = "223344",
@@ -190,7 +191,7 @@ namespace EFC_project
             {
                 ClientId = 1112,
                 Name = "David",
-                PhoneNumber = 13346551,
+                PhoneNumber = "13346551",
                 Email = "client2@gmail.com",
                 IdOfDocument = 12,
                 PassportNumber = "233344",
@@ -200,7 +201,7 @@ namespace EFC_project
             {
                 ClientId = 1113,
                 Name = "Woods",
-                PhoneNumber = 131354551,
+                PhoneNumber = "131354551",
                 Email = "client3@gmail.com",
                 IdOfDocument = 13,
                 PassportNumber = "243344",
@@ -239,6 +240,7 @@ namespace EFC_project
                 NumberOfStorage = Storage1.Number,
                 DateOfEntry = "12.04.2022",
                 DateOfExit = "13.04.2022",
+                ClientPhoneNumber = Client1.PhoneNumber,
                 ClientPassportNumber = Client1.PassportNumber,
                 ClientPassportSeria = Client1.PassportSeria
 
@@ -250,6 +252,7 @@ namespace EFC_project
                 NumberOfStorage = Storage2.Number,
                 DateOfEntry = "12.12.2022",
                 DateOfExit = "13.12.2022",
+                ClientPhoneNumber = Client2.PhoneNumber,
                 ClientPassportNumber = Client2.PassportNumber,
                 ClientPassportSeria = Client2.PassportSeria
             };
@@ -260,6 +263,7 @@ namespace EFC_project
                 NumberOfStorage = Storage3.Number,
                 DateOfEntry = "12.03.2022",
                 DateOfExit = "13.03.2022",
+                ClientPhoneNumber = Client3.PhoneNumber,
                 ClientPassportNumber = Client3.PassportNumber,
                 ClientPassportSeria = Client3.PassportSeria
             };

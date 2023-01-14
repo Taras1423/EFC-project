@@ -16,6 +16,7 @@ namespace EFC_project
     public class ApplicationContext : DbContext
     {
         public DbSet<MainStorage> Storages { get; set; } = null!;
+        //public IQueryable<MainStorage> GetStorageBySize(int size) => FromExpression(() => GetStorageBySize(size));
         public DbSet<Client> Clients { get; set; } = null!;
         public DbSet<Document> Documents { get; set; } = null!;
         public DbSet<Room> Rooms { get; set; } = null!;
@@ -26,7 +27,18 @@ namespace EFC_project
 
         public ApplicationContext()
         {
-            Database.EnsureCreated();   
+            Database.EnsureCreated();
+
+            /*var createSql = @"
+                create function [dbo].[GetStorageBySize] (@size int)
+                returns table
+                as
+                return
+                    select * from dbo.MainStorage
+                    where Size < @size
+            ";
+
+            Database.ExecuteSqlRaw(createSql);*/
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -37,11 +49,13 @@ namespace EFC_project
             var config = builder.Build();
             string connectionString = config.GetConnectionString("DefaultConnection");
 
-            optionsBuilder.UseSqlServer(connectionString);
+            optionsBuilder.UseLazyLoadingProxies().UseSqlServer(connectionString);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+           //modelBuilder.HasDbFunction(() => GetStorageBySize(default));
+
             modelBuilder.Entity<MainStorage>(entity =>
             {
                 entity.HasKey(u => u.Number).HasName("PK_Storage");
@@ -95,7 +109,7 @@ namespace EFC_project
                 Number = 1, 
                 NumberOfRooms = 2, 
                 IdOfWorker = 111, 
-                Size = 20,
+                Size = 100,
                 WorkerPassportNumber = "112233",
                 WorkerPassportSeria = "112234"
             };
@@ -113,7 +127,7 @@ namespace EFC_project
                 Number = 3, 
                 NumberOfRooms = 2, 
                 IdOfWorker = 113, 
-                Size = 20,
+                Size = 35,
                 WorkerPassportNumber = "132233",
                 WorkerPassportSeria = "132234"
             };
@@ -164,7 +178,7 @@ namespace EFC_project
             {
                 Number = 2,
                 NumberOfStorage = Storage2.Number,
-                NumberOfRows = 3,
+                NumberOfRows = 10,
                 TemperatureRange = "-10 °C - 0 °C",
                 StorageNumber = Storage2.Number
             };
@@ -232,7 +246,15 @@ namespace EFC_project
                 DateOfCancelRent = DateTime.Now.AddYears(30),
                 NumberOfCell = 1
             };
-       
+            Document Document4 = new Document
+            {
+                DocumentId = 14,
+                IdOfClient = 1114,
+                DateOfTakeRent = DateTime.Now.AddYears(3),
+                DateOfCancelRent = DateTime.Now.AddYears(40),
+                NumberOfCell = 10
+            };
+
             Visiting Visiting1 = new Visiting
             {
                 VisitingId = 11111,

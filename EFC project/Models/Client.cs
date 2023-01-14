@@ -24,7 +24,7 @@ namespace EFC_project.Models
         public int IdOfDocument { get; set; }
         public string PassportNumber { get; set; }
         public string PassportSeria { get; set; }
-        public List<Document> Documents { get; set; }
-        public List<Visiting> Visitings { get; set; }
+        public virtual List<Document> Documents { get; set; } = new List<Document>();
+        public virtual List<Visiting> Visitings { get; set; } = new List<Visiting>();
     }
 }

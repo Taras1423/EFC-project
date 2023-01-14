@@ -25,7 +25,7 @@ namespace EFC_project.Models
 
         public int NumberOfCell { get; set; }
 
-        public Client Client { get; set; }
+        public virtual Client Client { get; set; }
 
     }
 }

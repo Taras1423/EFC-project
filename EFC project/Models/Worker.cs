@@ -31,7 +31,7 @@ namespace EFC_project.Models
 
         public string PassportNumber { get; set; }
         public string PassportSeria { get; set; }
-        public MainStorage Storage { get; set; }
+        public virtual MainStorage Storage { get; set; } = null!;
 
     }
 }

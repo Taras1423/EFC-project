@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Xml.Linq;
@@ -302,8 +303,8 @@ static void LockExample()
     object locker = new object();
     int v = 4;
     int a = 1;
-    int f = 0;
-    for (int i = 0; i < 10; i++)
+    int f = 0; 
+    for (int i = 0; i < 1000; i++)
     {
         Thread newThread = new(() =>
         {
@@ -313,20 +314,20 @@ static void LockExample()
                 {
                     db.Rooms.Add(new Room
                     {
-                        //Number = v,
                         NumberOfStorage = a,
                         StorageNumber = a,
                         NumberOfRows = v,
                         TemperatureRange = f.ToString()
                     });
                     v++;
-                    Console.WriteLine(v);
+                    f++;
+                    //Console.WriteLine($"{v} - {f}");
                     db.SaveChanges();
                 }
             }
         });
-        newThread.Start();
-        Thread.Sleep(100);
+        //newThread.Start();
+        //Thread.Sleep(100);
     }
 }
 static void MonitorExample()
@@ -336,7 +337,7 @@ static void MonitorExample()
     int v = 4;
     int a = 1;
     int f = 0;
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 1000; i++)
     {
         Thread newThread = new(() =>
         {
@@ -354,7 +355,8 @@ static void MonitorExample()
                         TemperatureRange = f.ToString()
                     });
                     v++;
-                    Console.WriteLine(v);
+                    f++;
+                    //Console.WriteLine($"{v} - {f}");
                     db.SaveChanges();
                 }
                 finally
@@ -363,8 +365,8 @@ static void MonitorExample()
                 }
             }
         });
-        newThread.Start();
-        Thread.Sleep(100);
+        //newThread.Start();
+        //Thread.Sleep(100);
     }
 }
 static void MutexExample()
@@ -374,7 +376,7 @@ static void MutexExample()
     int v = 4;
     int a = 1;
     int f = 0;
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 1000; i++)
     {
         Thread newThread = new(() =>
         {
@@ -391,12 +393,12 @@ static void MutexExample()
                 db.SaveChanges();
                 v++;
                 f++;
-                Console.WriteLine($"{v} - {f}");
+                //Console.WriteLine($"{v} - {f}");
                 mutexObj.ReleaseMutex();
             }
         });
-        newThread.Start();
-        Thread.Sleep(1000);
+        //newThread.Start();
+        //Thread.Sleep(1000);
     }
 }
 
@@ -461,7 +463,7 @@ using (ApplicationContext db = new ApplicationContext())
     //SavedProcedure();
 
     // захист лаб 3 (за допомогою linq знайти 5 клієнтів які орендували комірки найбільшу кількість днів)
-    var documents = db.Documents.
+    /*var documents = db.Documents.
         Include(p => p.Client).
         Select(a => new
         {
@@ -474,14 +476,25 @@ using (ApplicationContext db = new ApplicationContext())
     foreach (var u in documents)
     {
         Console.WriteLine($"{u}");
-    }
+    }*/
 
-
+    //захист лаб 4
+    Stopwatch stopwatch = new Stopwatch();
 
     //await AsyncAdd();
-    //LockExample();
     //await AsyncRead();
-    //MonitorExample();
-    //MutexExample();
+    stopwatch.Start();
+    LockExample();
+    stopwatch.Stop();
+    Console.WriteLine($"Lock - {stopwatch.ElapsedMilliseconds}"); // 567
 
+    stopwatch.Start();
+    MonitorExample();
+    stopwatch.Stop();
+    Console.WriteLine($"Monitor - {stopwatch.ElapsedMilliseconds}"); // 1134
+
+    stopwatch.Start();
+    MutexExample();
+    stopwatch.Stop();
+    Console.WriteLine($"Mutex - {stopwatch.ElapsedMilliseconds}"); // 1679
 }

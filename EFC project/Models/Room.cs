@@ -13,7 +13,7 @@ namespace EFC_project.Models
         public int NumberOfStorage { get; set; }
         public int StorageNumber { get; set; }
         public int NumberOfRows { get; set; }
-        public string TemperatureRange { get; set; }
+        public string? TemperatureRange { get; set; }
         public virtual MainStorage Storage { get; set; } = null!;
 
     }

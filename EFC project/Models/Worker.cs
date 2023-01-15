@@ -20,14 +20,13 @@ namespace EFC_project.Models
         [MaxLength(25)]
         public string? Name { get; set; }
 
-        [Required]
         public int PhoneNumber { get; set; }
 
         [MaxLength(25)]
-        public string WorkShedule { get; set; }
+        public string? WorkShedule { get; set; }
 
         [MaxLength(25)]
-        public string Position { get; set; }
+        public string? Position { get; set; }
 
         public string PassportNumber { get; set; }
         public string PassportSeria { get; set; }

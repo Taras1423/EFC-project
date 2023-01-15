@@ -27,6 +27,7 @@ namespace EFC_project
 
         public ApplicationContext()
         {
+            Database.EnsureDeleted();
             Database.EnsureCreated();
 
             /*var createSql = @"
@@ -221,13 +222,53 @@ namespace EFC_project
                 PassportNumber = "243344",
                 PassportSeria = "243344"
             };
+            Client Client4 = new Client
+            {
+                ClientId = 1114,
+                Name = "Hudson",
+                PhoneNumber = "1365378965",
+                Email = "client4@gmail.com",
+                IdOfDocument = 14,
+                PassportNumber = "253344",
+                PassportSeria = "253344"
+            };
+            Client Client5 = new Client
+            {
+                ClientId = 1115,
+                Name = "Mykola",
+                PhoneNumber = "62586586",
+                Email = "client5@gmail.com",
+                IdOfDocument = 15,
+                PassportNumber = "263344",
+                PassportSeria = "263344"
+            };
+            Client Client6 = new Client
+            {
+                ClientId = 1116,
+                Name = "Shtainer",
+                PhoneNumber = "852368523",
+                Email = "client6@gmail.com",
+                IdOfDocument = 16,
+                PassportNumber = "273344",
+                PassportSeria = "273344"
+            };
+            Client Client7 = new Client
+            {
+                ClientId = 1117,
+                Name = "Menendes",
+                PhoneNumber = "02369842",
+                Email = "client7@gmail.com",
+                IdOfDocument = 17,
+                PassportNumber = "283344",
+                PassportSeria = "283344"
+            };
 
             Document Document1 = new Document
             {
                 DocumentId = 11,
                 IdOfClient = 1111,
                 DateOfTakeRent = DateTime.Now,
-                DateOfCancelRent = DateTime.Now.AddYears(10),
+                DateOfCancelRent = DateTime.Now.AddYears(1),
                 NumberOfCell = 3
             };
             Document Document2 = new Document
@@ -235,7 +276,7 @@ namespace EFC_project
                 DocumentId = 12,
                 IdOfClient = 1112,
                 DateOfTakeRent = DateTime.Now.AddYears(1),
-                DateOfCancelRent = DateTime.Now.AddYears(20),
+                DateOfCancelRent = DateTime.Now.AddYears(2),
                 NumberOfCell = 5
             };
             Document Document3 = new Document
@@ -243,7 +284,7 @@ namespace EFC_project
                 DocumentId = 13,
                 IdOfClient = 1113,
                 DateOfTakeRent = DateTime.Now.AddYears(2),
-                DateOfCancelRent = DateTime.Now.AddYears(30),
+                DateOfCancelRent = DateTime.Now.AddYears(4),
                 NumberOfCell = 1
             };
             Document Document4 = new Document
@@ -251,8 +292,32 @@ namespace EFC_project
                 DocumentId = 14,
                 IdOfClient = 1114,
                 DateOfTakeRent = DateTime.Now.AddYears(3),
-                DateOfCancelRent = DateTime.Now.AddYears(40),
+                DateOfCancelRent = DateTime.Now.AddYears(4),
                 NumberOfCell = 10
+            };
+            Document Document5 = new Document
+            {
+                DocumentId = 15,
+                IdOfClient = 1115,
+                DateOfTakeRent = DateTime.Now.AddYears(4),
+                DateOfCancelRent = DateTime.Now.AddYears(7),
+                NumberOfCell = 15
+            };
+            Document Document6 = new Document
+            {
+                DocumentId = 16,
+                IdOfClient = 1116,
+                DateOfTakeRent = DateTime.Now.AddYears(5),
+                DateOfCancelRent = DateTime.Now.AddYears(10),
+                NumberOfCell = 4
+            };
+            Document Document7 = new Document
+            {
+                DocumentId = 17,
+                IdOfClient = 1117,
+                DateOfTakeRent = DateTime.Now.AddYears(1),
+                DateOfCancelRent = DateTime.Now.AddYears(15),
+                NumberOfCell = 7
             };
 
             Visiting Visiting1 = new Visiting
@@ -271,7 +336,7 @@ namespace EFC_project
             {
                 VisitingId = 11112,
                 IdOfClient = Client2.ClientId,
-                NumberOfStorage = Storage2.Number,
+                NumberOfStorage = Storage1.Number,
                 DateOfEntry = "12.12.2022",
                 DateOfExit = "13.12.2022",
                 ClientPhoneNumber = Client2.PhoneNumber,
@@ -282,22 +347,64 @@ namespace EFC_project
             {
                 VisitingId = 11113,
                 IdOfClient = Client3.ClientId,
-                NumberOfStorage = Storage3.Number,
+                NumberOfStorage = Storage1.Number,
                 DateOfEntry = "12.03.2022",
                 DateOfExit = "13.03.2022",
                 ClientPhoneNumber = Client3.PhoneNumber,
                 ClientPassportNumber = Client3.PassportNumber,
                 ClientPassportSeria = Client3.PassportSeria
             };
+            Visiting Visiting4 = new Visiting
+            {
+                VisitingId = 11114,
+                IdOfClient = Client4.ClientId,
+                NumberOfStorage = Storage2.Number,
+                DateOfEntry = "12.04.2022",
+                DateOfExit = "13.04.2022",
+                ClientPhoneNumber = Client4.PhoneNumber,
+                ClientPassportNumber = Client4.PassportNumber,
+                ClientPassportSeria = Client4.PassportSeria
+            };
+            Visiting Visiting5 = new Visiting
+            {
+                VisitingId = 11115,
+                IdOfClient = Client5.ClientId,
+                NumberOfStorage = Storage2.Number,
+                DateOfEntry = "12.05.2022",
+                DateOfExit = "13.05.2022",
+                ClientPhoneNumber = Client5.PhoneNumber,
+                ClientPassportNumber = Client5.PassportNumber,
+                ClientPassportSeria = Client5.PassportSeria
+            };
+            Visiting Visiting6 = new Visiting
+            {
+                VisitingId = 11116,
+                IdOfClient = Client6.ClientId,
+                NumberOfStorage = Storage2.Number,
+                DateOfEntry = "12.06.2022",
+                DateOfExit = "13.06.2022",
+                ClientPhoneNumber = Client6.PhoneNumber,
+                ClientPassportNumber = Client6.PassportNumber,
+                ClientPassportSeria = Client6.PassportSeria
+            };
+            Visiting Visiting7 = new Visiting
+            {
+                VisitingId = 11117,
+                IdOfClient = Client7.ClientId,
+                NumberOfStorage = Storage3.Number,
+                DateOfEntry = "12.07.2021",
+                DateOfExit = "13.07.2021",
+                ClientPhoneNumber = Client7.PhoneNumber,
+                ClientPassportNumber = Client7.PassportNumber,
+                ClientPassportSeria = Client7.PassportSeria
+            };
 
             modelBuilder.Entity<MainStorage>().HasData(Storage1, Storage2, Storage3);
-            modelBuilder.Entity<Client>().HasData(Client1, Client2, Client3);
-            modelBuilder.Entity<Document>().HasData(Document1, Document2, Document3);
+            modelBuilder.Entity<Client>().HasData(Client1, Client2, Client3, Client4, Client5, Client6, Client7);
+            modelBuilder.Entity<Document>().HasData(Document1, Document2, Document3, Document4, Document5, Document6, Document7);
             modelBuilder.Entity<Worker>().HasData(Worker1, Worker2, Worker3);
-            modelBuilder.Entity<Visiting>().HasData(Visiting1, Visiting2, Visiting3);
+            modelBuilder.Entity<Visiting>().HasData(Visiting1, Visiting2, Visiting3, Visiting4, Visiting5, Visiting6, Visiting7);
             modelBuilder.Entity<Room>().HasData(Room1, Room2, Room3);
         }
-
-
     }
 }

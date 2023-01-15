@@ -8,7 +8,6 @@ namespace EFC_project.Models
 {
     public class Owner : Worker
     {
-        public int StoragesOwned { get; set; }
-        public int AnnualIncome { get; set; } // річний дохід
+        public string? Email { get; set; }
     }
 }

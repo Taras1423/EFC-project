@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection.Metadata;
+using System.Xml.Linq;
 using EFC_project;
 using EFC_project.Models;
 using Microsoft.Data.SqlClient;
@@ -162,7 +165,7 @@ static void AgrFunctions()
     int maxSize = db.Storages.Max(a => a.Size);
     int countStorages = db.Storages.Count();
     int avgSize = (int)db.Storages.Average(a => a.Size);
-    int sumSize = (int)db.Storages.Sum(a => a.Size);
+    int sumSize = db.Storages.Sum(a => a.Size);
 
     Console.WriteLine($"\nAgrFunctions result:");
     Console.WriteLine($"Min Size - {minSize}, \nMax Size - {maxSize}, \nAvg Size - {avgSize}, \nSummary Size - {sumSize}, \nNumber of Storages - {countStorages}");
@@ -267,6 +270,136 @@ static void SavedProcedure()
         Console.WriteLine($"{u.Name} - {u.ClientId}");
 }
 
+static async Task AsyncAdd()
+{
+    ApplicationContext db = new ApplicationContext();
+    for (int i = 0; i < 10; i++)
+    {
+        await db.Rooms.AddAsync(new Room
+        {
+            NumberOfStorage = 3,
+            StorageNumber = 3,
+            NumberOfRows = i,
+            TemperatureRange = i.ToString()
+        });       
+        await db.SaveChangesAsync();
+        Console.WriteLine(i);
+    }
+}
+static async Task AsyncRead()
+{
+    ApplicationContext db = new ApplicationContext();
+    var workers = await db.Workers.ToListAsync();
+    Console.WriteLine("AsyncRead result:");
+    foreach (var worker in workers)
+    {
+        Console.WriteLine(worker.Name);
+    }
+}
+static void LockExample()
+{
+    ApplicationContext db = new ApplicationContext();
+    object locker = new object();
+    int v = 4;
+    int a = 1;
+    int f = 0;
+    for (int i = 0; i < 10; i++)
+    {
+        Thread newThread = new(() =>
+        {
+            for (int j = 0; j < 100; j++)
+            {
+                lock (locker)
+                {
+                    db.Rooms.Add(new Room
+                    {
+                        //Number = v,
+                        NumberOfStorage = a,
+                        StorageNumber = a,
+                        NumberOfRows = v,
+                        TemperatureRange = f.ToString()
+                    });
+                    v++;
+                    Console.WriteLine(v);
+                    db.SaveChanges();
+                }
+            }
+        });
+        newThread.Start();
+        Thread.Sleep(100);
+    }
+}
+static void MonitorExample()
+{
+    ApplicationContext db = new ApplicationContext();
+    object locker = new object();
+    int v = 4;
+    int a = 1;
+    int f = 0;
+    for (int i = 0; i < 10; i++)
+    {
+        Thread newThread = new(() =>
+        {
+            for (int j = 0; j < 100; j++)
+            {
+                bool lockTaken = false;
+                try
+                {
+                    Monitor.Enter(locker, ref lockTaken);
+                    db.Rooms.Add(new Room
+                    {
+                        NumberOfStorage = a,
+                        StorageNumber = a,
+                        NumberOfRows = v,
+                        TemperatureRange = f.ToString()
+                    });
+                    v++;
+                    Console.WriteLine(v);
+                    db.SaveChanges();
+                }
+                finally
+                {
+                    if (lockTaken) Monitor.Exit(locker);
+                }
+            }
+        });
+        newThread.Start();
+        Thread.Sleep(100);
+    }
+}
+static void MutexExample()
+{
+    ApplicationContext db = new ApplicationContext();
+    Mutex mutexObj = new Mutex();
+    int v = 4;
+    int a = 1;
+    int f = 0;
+    for (int i = 0; i < 10; i++)
+    {
+        Thread newThread = new(() =>
+        {
+            for (int j = 0; j < 100; j++)
+            {
+                mutexObj.WaitOne();
+                db.Rooms.Add(new Room
+                {
+                    NumberOfStorage = a,
+                    StorageNumber = a,
+                    NumberOfRows = v,
+                    TemperatureRange = f.ToString()
+                });
+                db.SaveChanges();
+                v++;
+                f++;
+                Console.WriteLine($"{v} - {f}");
+                mutexObj.ReleaseMutex();
+            }
+        });
+        newThread.Start();
+        Thread.Sleep(1000);
+    }
+}
+
 using (ApplicationContext db = new ApplicationContext())
 {
     // захист лаб 2 (Client.PhoneNumber i Client.Name унікальні, зв'язок Visitings-Client через PhoneNumber)
@@ -284,7 +417,6 @@ using (ApplicationContext db = new ApplicationContext())
             $"{u.ClientPassportNumber}, " +
             $"{u.ClientPassportSeria}, ");
     }
-
     var clients = db.Clients.ToList();
     Console.WriteLine("Clients list:");
     foreach (Client u in clients)
@@ -297,6 +429,17 @@ using (ApplicationContext db = new ApplicationContext())
             $"{u.IdOfDocument}, " +
             $"{u.PassportNumber}, " +
             $"{u.PassportSeria}, ");
+    }
+    var documents = db.Documents.ToList();
+    Console.WriteLine("Documents list:");
+    foreach (Document u in documents)
+    {
+        Console.WriteLine($"" +
+            $"{u.DocumentId}, " +
+            $"{u.IdOfClient}, " +
+            $"{u.DateOfTakeRent}, " +
+            $"{u.DateOfCancelRent}, " +
+            $"{u.NumberOfCell}");
     }*/
 
     /*Union();
@@ -316,5 +459,29 @@ using (ApplicationContext db = new ApplicationContext())
 
     //SavedFunction();
     //SavedProcedure();
+
+    // захист лаб 3 (за допомогою linq знайти 5 клієнтів які орендували комірки найбільшу кількість днів)
+    var documents = db.Documents.
+        Include(p => p.Client).
+        Select(a => new
+        {
+            a.Client.Name,
+            Days = (a.DateOfCancelRent - a.DateOfTakeRent).TotalDays
+        })
+        //.OrderByDescending(p => p.Days)
+        .Take(5);
+    Console.WriteLine("Top 5 clients for the longest rent:");
+    foreach (var u in documents)
+    {
+        Console.WriteLine($"{u}");
+    }
+
+
+
+    //await AsyncAdd();
+    //LockExample();
+    //await AsyncRead();
+    //MonitorExample();
+    //MutexExample();
 
 }

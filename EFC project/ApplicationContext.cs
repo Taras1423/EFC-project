@@ -50,7 +50,11 @@ namespace EFC_project
             var config = builder.Build();
             string connectionString = config.GetConnectionString("DefaultConnection");
 
-            optionsBuilder.UseLazyLoadingProxies().UseSqlServer(connectionString);
+            optionsBuilder.UseLazyLoadingProxies().UseSqlServer(connectionString, builder =>
+            {
+                builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
+            });
+            base.OnConfiguring(optionsBuilder);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -319,6 +323,14 @@ namespace EFC_project
                 DateOfCancelRent = DateTime.Now.AddYears(15),
                 NumberOfCell = 7
             };
+            Document Document8 = new Document
+            {
+                DocumentId = 18,
+                IdOfClient = 1117,
+                DateOfTakeRent = DateTime.Now.AddYears(1),
+                DateOfCancelRent = DateTime.Now.AddYears(15),
+                NumberOfCell = 7
+            };
 
             Visiting Visiting1 = new Visiting
             {
@@ -401,7 +413,7 @@ namespace EFC_project
 
             modelBuilder.Entity<MainStorage>().HasData(Storage1, Storage2, Storage3);
             modelBuilder.Entity<Client>().HasData(Client1, Client2, Client3, Client4, Client5, Client6, Client7);
-            modelBuilder.Entity<Document>().HasData(Document1, Document2, Document3, Document4, Document5, Document6, Document7);
+            modelBuilder.Entity<Document>().HasData(Document1, Document2, Document3, Document4, Document5, Document6, Document7, Document8);
             modelBuilder.Entity<Worker>().HasData(Worker1, Worker2, Worker3);
             modelBuilder.Entity<Visiting>().HasData(Visiting1, Visiting2, Visiting3, Visiting4, Visiting5, Visiting6, Visiting7);
             modelBuilder.Entity<Room>().HasData(Room1, Room2, Room3);

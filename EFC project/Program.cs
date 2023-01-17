@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -302,9 +303,9 @@ static void LockExample()
     ApplicationContext db = new ApplicationContext();
     object locker = new object();
     int v = 4;
-    int a = 1;
+    //int a = 1;
     int f = 0; 
-    for (int i = 0; i < 1000; i++)
+    for (int i = 0; i < 10; i++)
     {
         Thread newThread = new(() =>
         {
@@ -314,8 +315,8 @@ static void LockExample()
                 {
                     db.Rooms.Add(new Room
                     {
-                        NumberOfStorage = a,
-                        StorageNumber = a,
+                        NumberOfStorage = 1,
+                        StorageNumber = 1,
                         NumberOfRows = v,
                         TemperatureRange = f.ToString()
                     });
@@ -326,7 +327,7 @@ static void LockExample()
                 }
             }
         });
-        //newThread.Start();
+        newThread.Start();
         //Thread.Sleep(100);
     }
 }
@@ -337,7 +338,7 @@ static void MonitorExample()
     int v = 4;
     int a = 1;
     int f = 0;
-    for (int i = 0; i < 1000; i++)
+    for (int i = 0; i < 10; i++)
     {
         Thread newThread = new(() =>
         {
@@ -365,7 +366,7 @@ static void MonitorExample()
                 }
             }
         });
-        //newThread.Start();
+        newThread.Start();
         //Thread.Sleep(100);
     }
 }
@@ -376,7 +377,7 @@ static void MutexExample()
     int v = 4;
     int a = 1;
     int f = 0;
-    for (int i = 0; i < 1000; i++)
+    for (int i = 0; i < 10; i++)
     {
         Thread newThread = new(() =>
         {
@@ -397,7 +398,7 @@ static void MutexExample()
                 mutexObj.ReleaseMutex();
             }
         });
-        //newThread.Start();
+        newThread.Start();
         //Thread.Sleep(1000);
     }
 }
@@ -463,38 +464,47 @@ using (ApplicationContext db = new ApplicationContext())
     //SavedProcedure();
 
     // захист лаб 3 (за допомогою linq знайти 5 клієнтів які орендували комірки найбільшу кількість днів)
-    /*var documents = db.Documents.
-        Include(p => p.Client).
-        Select(a => new
+    var query = db.Clients
+        .Join(db.Documents,
+        client => client.ClientId,
+        document => document.IdOfClient,
+        (client, document) => new
         {
-            a.Client.Name,
-            Days = (a.DateOfCancelRent - a.DateOfTakeRent).TotalDays
+            ClientId = client.ClientId,
+            Days = (document.DateOfCancelRent - document.DateOfTakeRent).TotalDays
         })
-        //.OrderByDescending(p => p.Days)
+        .ToList()
+        .GroupBy(p => p.ClientId, (client, total) => new
+        {
+            Client = client,
+            Days = total.Sum(p => p.Days)
+        })
+        .OrderByDescending(p => p.Days)
         .Take(5);
+    
     Console.WriteLine("Top 5 clients for the longest rent:");
-    foreach (var u in documents)
+    foreach (var u in query)
     {
         Console.WriteLine($"{u}");
-    }*/
+    }
 
     //захист лаб 4
     Stopwatch stopwatch = new Stopwatch();
 
     //await AsyncAdd();
     //await AsyncRead();
-    stopwatch.Start();
+    /*stopwatch.Start();
     LockExample();
     stopwatch.Stop();
-    Console.WriteLine($"Lock - {stopwatch.ElapsedMilliseconds}"); // 567
+    Console.WriteLine($"Lock - {stopwatch.ElapsedMilliseconds}");*/
 
-    stopwatch.Start();
+    /*stopwatch.Start();
     MonitorExample();
     stopwatch.Stop();
-    Console.WriteLine($"Monitor - {stopwatch.ElapsedMilliseconds}"); // 1134
+    Console.WriteLine($"Monitor - {stopwatch.ElapsedMilliseconds}");*/
 
-    stopwatch.Start();
+    /*stopwatch.Start();
     MutexExample();
     stopwatch.Stop();
-    Console.WriteLine($"Mutex - {stopwatch.ElapsedMilliseconds}"); // 1679
+    Console.WriteLine($"Mutex - {stopwatch.ElapsedMilliseconds}");*/
 }
